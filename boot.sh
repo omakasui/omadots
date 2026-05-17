@@ -8,7 +8,6 @@ set -o pipefail
 # Use custom repo if specified, otherwise use default
 DOTFILES_REPO="${DOTFILES_REPO:-Kasui92/dotfiles}"
 DOTFILES_DIR="$HOME/.cfg"
-LOCAL_BIN="$HOME/.local/bin"
 
 # Colors for output
 RED='\e[31m'
@@ -46,35 +45,22 @@ if [ ! -d "$DOTFILES_DIR" ]; then
   fi
 fi
 
-# Create ~/.local/bin directory if it doesn't exist
-if [ ! -d "$LOCAL_BIN" ]; then
-  echo -e "${CYAN}\nCreating $LOCAL_BIN directory...${RESET}"
-  mkdir -p "$LOCAL_BIN"
+# Check if it's already in PATH
+if ! echo "$PATH" | grep -q "$DOTFILES_DIR/bin"; then
+  # .bashrc
+  if [ -f ~/.bashrc ]; then
+    echo "export PATH=\"\$HOME/.cfg/bin:\$PATH\"" >> ~/.bashrc
+  fi
+
+  # .zshrc
+  if [ -f ~/.zshrc ]; then
+    echo "export PATH=\"\$HOME/.cfg/bin:\$PATH\"" >> ~/.zshrc
+  fi
+
+  echo -e "${GREEN}✓ Dotfiles command added to PATH!${RESET}"
+else
+  echo -e "${YELLOW}Dotfiles command already in PATH, skipping PATH setup.${RESET}"
 fi
 
-# Make the dotfiles script executable
-chmod +x "$DOTFILES_DIR/dotfiles"
-
-# Create symlink to dotfiles command
-if [ -L "$LOCAL_BIN/dotfiles" ] || [ -e "$LOCAL_BIN/dotfiles" ]; then
-  echo -e "${YELLOW}\nRemoving existing dotfiles command...${RESET}"
-  rm -f "$LOCAL_BIN/dotfiles"
-fi
-
-echo -e "${CYAN}\nCreating symlink for dotfiles command...${RESET}"
-ln -s "$DOTFILES_DIR/dotfiles" "$LOCAL_BIN/dotfiles"
-
-# Check if ~/.local/bin is in PATH
-if [[ ":$PATH:" != *":$LOCAL_BIN:"* ]]; then
-  echo -e "${YELLOW}\nWarning: $LOCAL_BIN is not in your PATH.${RESET}"
-  echo -e "${CYAN}Add the following line to your ~/.bashrc or ~/.zshrc:${RESET}"
-  echo -e "  export PATH=\"\$HOME/.local/bin:\$PATH\""
-  echo -e "${CYAN}\nOr run this command now:${RESET}"
-  echo -e "  export PATH=\"\$HOME/.local/bin:\$PATH\""
-fi
-
-echo -e "${GREEN}\n✓ Bootstrap completed successfully!${RESET}"
-echo -e "${CYAN}\nYou can now use the 'dotfiles' command:${RESET}"
-echo -e "  ${GREEN}dotfiles help${RESET}     - Show available commands"
-echo -e "  ${GREEN}dotfiles list${RESET}     - List available configurations"
-echo -e "  ${GREEN}dotfiles install${RESET}  - Install a configuration\n"
+# Finish installation
+echo -e "${GREEN}✓ Dotfiles installation completed!${RESET}"

@@ -1,0 +1,2 @@
+export DOTFILES_PATH=$HOME/.cfg
+export PATH=$DOTFILES_PATH/bin:$PATH

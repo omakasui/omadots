@@ -1,0 +1,1 @@
+for f in $DOTFILES_PATH/bash/fns/*; do source "$f"; done

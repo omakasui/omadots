@@ -1,0 +1,67 @@
+#!/bin/bash
+
+set -o pipefail
+
+# dotfiles:summary=Update Dotfiles
+
+source "$DOTFILES_PATH/lib/output"
+
+if [ ! -d "$DOTFILES_PATH" ]; then
+  echo -e "${RED}Error: Dotfiles directory not found at $DOTFILES_PATH${RESET}"
+  exit 1
+fi
+
+if [ ! -d "$DOTFILES_PATH/.git" ]; then
+  echo -e "${RED}Error: $DOTFILES_PATH is not a git repository${RESET}"
+  exit 1
+fi
+
+echo -e "${CYAN}Updating dotfiles from git repository...${RESET}"
+
+cd "$DOTFILES_PATH" || exit 1
+
+# Check if there are uncommitted changes
+if ! git diff-index --quiet HEAD -- 2>/dev/null; then
+  echo -e "${YELLOW}Warning: You have uncommitted changes in the dotfiles directory.${RESET}"
+  read -p $'\e[36mDo you want to stash them and continue? (y/N): \e[0m' choice < /dev/tty
+  choice=${choice:-N}
+  case "$choice" in
+    y|Y )
+      echo -e "${CYAN}Stashing local changes...${RESET}"
+      git stash push -m "Auto-stash before dotfiles update at $(date)"
+      STASHED=true
+      ;;
+    * )
+      echo -e "${YELLOW}Update cancelled.${RESET}"
+      exit 0
+      ;;
+  esac
+fi
+
+# Pull latest changes
+if git pull --rebase; then
+  # If we stashed changes, ask to restore them
+  if [ "${STASHED:-false}" = true ]; then
+    echo -e "${CYAN}\nYour local changes were stashed.${RESET}"
+    read -p $'\e[36mDo you want to restore them now? (y/N): \e[0m' restore_choice < /dev/tty
+    restore_choice=${restore_choice:-N}
+    case "$restore_choice" in
+      y|Y )
+        if git stash pop; then
+          echo -e "${GREEN}✓ Local changes restored successfully!${RESET}"
+        else
+          echo -e "${YELLOW}Warning: Could not restore local changes automatically.${RESET}"
+          echo -e "${CYAN}Run 'git stash pop' manually in $DOTFILES_PATH to restore them.${RESET}"
+        fi
+        ;;
+      * )
+        echo -e "${CYAN}Local changes remain stashed.${RESET}"
+        echo -e "${CYAN}Run 'git stash pop' in $DOTFILES_PATH to restore them later.${RESET}"
+        ;;
+    esac
+  fi
+else
+  echo -e "${RED}✗ Failed to update dotfiles repository.${RESET}"
+  echo -e "${CYAN}Please check your git configuration and try again.${RESET}"
+  exit 1
+fi

@@ -1,0 +1,4 @@
+source ~/.cfg/bash/envs
+source ~/.cfg/bash/aliases
+source ~/.cfg/bash/functions
+source ~/.cfg/bash/init

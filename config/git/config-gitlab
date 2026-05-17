@@ -1,0 +1,6 @@
+[user]
+email = pattocchioluca@gmail.com
+signingkey =
+
+[commit]
+gpgsign = true

@@ -1,0 +1,6 @@
+[user]
+email = 15154851+Kasui92@users.noreply.github.com
+signingkey =
+
+[commit]
+gpgsign = true
