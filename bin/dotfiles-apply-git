@@ -1,0 +1,12 @@
+#! /bin/bash
+
+# dotfiles:summary=Apply dotfiles bash aliases and functions
+
+source "$DOTFILES_PATH/lib/output"
+
+apply_dotfiles_git() {
+    cp -R $DOTFILES_PATH/config/git/* $HOME/.config/git
+}
+
+apply_dotfiles_git
+echo -e "${GREEN}Dotfiles git configuration applied to $HOME/.config/git.${RESET}"
