@@ -26,10 +26,10 @@ declare -A ROUTE_IS_ALIAS
 declare -A BINARY_TO_KEY
 declare -A GROUP_DESCRIPTIONS
 
+GROUP_DESCRIPTIONS[apply]="Apply dotfiles configuration to the system"
 GROUP_DESCRIPTIONS[dev]="Dotfiles development tools"
-GROUP_DESCRIPTIONS[install]="Installers"
+GROUP_DESCRIPTIONS[omakasui]="Omakasui development tools"
 GROUP_DESCRIPTIONS[update]="Dotfiles updates"
-GROUP_DESCRIPTIONS[version]="Version information"
 
 join_words() {
   local separator="$1"
