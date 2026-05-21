@@ -1,1 +1,6 @@
+# prevent warning about put zoxide in the end of .bashrc
+if command -v zoxide &> /dev/null; then
+  eval "$(zoxide init bash)"
+fi
+
 source "$DOTFILES_PATH/bash/completions"
