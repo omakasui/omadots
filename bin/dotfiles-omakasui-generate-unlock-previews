@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# dotfiles:summary=Generate themed preview-unlock.png previews for all themes
+# dotfiles:args=<path to omakasui themes directory (f.e. ~/.local/share/omakub/themes)>
+# dotfiles:group=omakasui
+
+if [[ $# -ne 1 ]]; then
+  echo "Usage: $0 <path to omakasui themes directory>"
+  exit 1
+fi
+
+THEMES_DIR="$1"
+
+for theme_dir in "$THEMES_DIR"/*/; do
+  theme_name=$(basename "$theme_dir")
+  colors_file="$theme_dir/colors.toml"
+  unlock_png="$theme_dir/unlock.png"
+  output_png="$theme_dir/preview-unlock.png"
+
+  if [[ ! -f "$colors_file" ]]; then
+    echo "Skipping $theme_name: no colors.toml"
+    continue
+  fi
+
+  if [[ ! -f "$unlock_png" ]]; then
+    echo "Skipping $theme_name: no unlock.png"
+    continue
+  fi
+
+  accent=$(grep -m1 '^accent' "$colors_file" | sed 's/.*=\s*"\(#[^"]*\)".*/\1/')
+  background=$(grep -m1 '^background' "$colors_file" | sed 's/.*=\s*"\(#[^"]*\)".*/\1/')
+
+  if [[ -z "$accent" || -z "$background" ]]; then
+    echo "Skipping $theme_name: missing accent or background color"
+    continue
+  fi
+
+  echo "Generating $theme_name/preview-unlock.png (accent=$accent bg=$background)"
+  omakub-plymouth-preview "$background" "$accent" "$unlock_png" "$output_png"
+done
