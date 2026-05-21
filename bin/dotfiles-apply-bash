@@ -2,6 +2,7 @@
 
 # dotfiles:summary=Apply dotfiles bash aliases and functions
 
+DOTFILES_PATH="${DOTFILES_PATH:=${HOME}/.cfg}"
 source "$DOTFILES_PATH/lib/output"
 
 apply_dotfiles_bash() {
@@ -14,7 +15,7 @@ EOF
 }
 
 # Check if .bashrc already contains the source line
-if grep -q "source \$HOME/.cfg/bash/rc" ~/.bashrc 2>/dev/null; then
+if grep -q "source \"\$HOME/.cfg/bash/rc\"" ~/.bashrc; then
     echo -e "${YELLOW}Dotfiles bash configuration already applied in .bashrc, skipping.${RESET}"
 else
     apply_dotfiles_bash
