@@ -1,20 +1,21 @@
 #!/bin/bash
 # dotfiles:summary=Generate themed preview-unlock.png previews for all themes
-# dotfiles:args=<path to omakasui themes directory (f.e. ~/.local/share/omakub/themes)>
+# dotfiles:args=<path to omakasui themes directory (f.e. ~/.local/share/omakub/themes)> <optional: name of the output file (default: backgrounds/omabuntu.png)>
 # dotfiles:group=omakasui
 
-if [[ $# -ne 1 ]]; then
-  echo "Usage: $0 <path to omakasui themes directory>"
+if [[ $# -lt 1 || $# -gt 2 ]]; then
+  echo "Usage: $0 <path to omakasui themes directory> [output file name]"
   exit 1
 fi
 
 THEMES_DIR="$1"
+OUTPUT_FILE="${2:-backgrounds/omabuntu.png}"
 
 for theme_dir in "$THEMES_DIR"/*/; do
   theme_name=$(basename "$theme_dir")
   colors_file="$theme_dir/colors.toml"
   unlock_png="$theme_dir/unlock.png"
-  output_png="$theme_dir/backgrounds/omabuntu.png"
+  output_png="$theme_dir/$OUTPUT_FILE"
 
   if [[ ! -f "$colors_file" ]]; then
     echo "Skipping $theme_name: no colors.toml"
@@ -34,7 +35,7 @@ for theme_dir in "$THEMES_DIR"/*/; do
     continue
   fi
 
-  echo "Generating $theme_name/backgrounds/omabuntu.png (accent=$accent bg=$background)"
+  echo "Generating $theme_name/$OUTPUT_FILE (accent=$accent bg=$background)"
 
   bg_hex="${background#\#}"
   text_hex="${accent#\#}"
