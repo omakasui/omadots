@@ -36,5 +36,42 @@ for theme_dir in "$THEMES_DIR"/*/; do
   fi
 
   echo "Generating $theme_name/preview-unlock.png (accent=$accent bg=$background)"
-  omakub-plymouth-preview "$background" "$accent" "$unlock_png" "$output_png"
+
+  bg_hex="${background#\#}"
+  text_hex="${accent#\#}"
+  logo_path="$unlock_png"
+  output_path="$output_png"
+
+  if ! [[ $bg_hex =~ ^[0-9a-fA-F]{6}$ ]]; then
+    echo "Invalid background color: $1 (expected #RRGGBB)" >&2
+    exit 1
+  fi
+
+  if ! [[ $text_hex =~ ^[0-9a-fA-F]{6}$ ]]; then
+    echo "Invalid text color: $2 (expected #RRGGBB)" >&2
+    exit 1
+  fi
+
+  if [[ ! -f $logo_path ]]; then
+    echo "Logo file not found: $logo_path" >&2
+    exit 1
+  fi
+
+  staging_dir=$(mktemp -d)
+  trap 'rm -rf "$staging_dir"' EXIT
+
+  cp "$logo_path" "$staging_dir/logo.png"
+
+  canvas_w=1920
+  canvas_h=1080
+
+  logo_w=$(identify -format '%w' "$staging_dir/logo.png")
+  logo_h=$(identify -format '%h' "$staging_dir/logo.png")
+
+  logo_x=$(( (canvas_w - logo_w) / 2 ))
+  logo_y=$(( (canvas_h - logo_h) / 2 ))
+
+  convert -size ${canvas_w}x${canvas_h} "xc:#$bg_hex" \
+    "$staging_dir/logo.png" -geometry +${logo_x}+${logo_y} -composite \
+    "$output_path"
 done
