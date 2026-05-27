@@ -1,6 +1,6 @@
 #!/bin/bash
 # dotfiles:summary=Generate themed bootloader backgrounds for all themes (using unlock.png as logo)
-# dotfiles:args=<path to omakasui themes directory (f.e. ~/.local/share/omakub/themes)> <optional: name of the output file (default: background.png)>
+# dotfiles:args=<path to omakasui themes directory (f.e. ~/.local/share/omakub/themes)> <optional: name of the output file (default: bootloader.png)>
 # dotfiles:group=omakasui
 
 if [[ $# -lt 1 || $# -gt 2 ]]; then
@@ -9,7 +9,7 @@ if [[ $# -lt 1 || $# -gt 2 ]]; then
 fi
 
 THEMES_DIR="$1"
-OUTPUT_FILE="${2:-background.png}"
+OUTPUT_FILE="${2:-bootloader.png}"
 
 for theme_dir in "$THEMES_DIR"/*/; do
   theme_name=$(basename "$theme_dir")
@@ -68,10 +68,25 @@ for theme_dir in "$THEMES_DIR"/*/; do
   logo_w=$(identify -format '%w' "$staging_dir/logo.png")
   logo_h=$(identify -format '%h' "$staging_dir/logo.png")
 
-  logo_x=200
-  logo_y=100
+  max_logo_w=$((canvas_w / 2))
+  max_logo_h=$((canvas_h / 2))
+  logo_aspect=$((logo_w * 1000 / logo_h))
+
+  if (( logo_w > max_logo_w )); then
+    logo_w=$max_logo_w
+    logo_h=$((logo_w * 1000 / logo_aspect))
+  fi
+
+  if (( logo_h > max_logo_h )); then
+    logo_h=$max_logo_h
+    logo_w=$((logo_h * logo_aspect / 1000))
+  fi
+
+  margin=20
+  logo_x=$margin
+  logo_y=$margin
 
   convert -size ${canvas_w}x${canvas_h} "xc:#$bg_hex" \
-    "$staging_dir/logo.png" -geometry +${logo_x}+${logo_y} -composite \
+    \( "$staging_dir/logo.png" -resize ${logo_w}x${logo_h} \) -geometry +${logo_x}+${logo_y} -composite \
     "$output_path"
 done
