@@ -1,6 +1,6 @@
 #!/bin/bash
 # dotfiles:summary=Generate themed preview-unlock.png previews for all themes
-# dotfiles:args=<path to omakasui themes directory (f.e. ~/.local/share/omakub/themes)> <optional: name of the output file (default: backgrounds/omabuntu.png)>
+# dotfiles:args=<path to omakasui themes directory (f.e. ~/.local/share/omakub/themes)> <optional: name of the output file (default: background.png)>
 # dotfiles:group=omakasui
 
 if [[ $# -lt 1 || $# -gt 2 ]]; then
@@ -9,7 +9,7 @@ if [[ $# -lt 1 || $# -gt 2 ]]; then
 fi
 
 THEMES_DIR="$1"
-OUTPUT_FILE="${2:-backgrounds/omabuntu.png}"
+OUTPUT_FILE="${2:-background.png}"
 
 for theme_dir in "$THEMES_DIR"/*/; do
   theme_name=$(basename "$theme_dir")
@@ -60,7 +60,6 @@ for theme_dir in "$THEMES_DIR"/*/; do
   staging_dir=$(mktemp -d)
   trap 'rm -rf "$staging_dir"' EXIT
 
-  find ~/.local/share/omakub/default/plymouth -maxdepth 1 -type f -exec cp -t "$staging_dir/" {} +
   cp "$logo_path" "$staging_dir/logo.png"
 
   canvas_w=3840
