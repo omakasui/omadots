@@ -65,28 +65,45 @@ for theme_dir in "$THEMES_DIR"/*/; do
   canvas_w=800
   canvas_h=600
 
-  logo_w=$(identify -format '%w' "$staging_dir/logo.png")
-  logo_h=$(identify -format '%h' "$staging_dir/logo.png")
+  src_logo_w=$(identify -format '%w' "$staging_dir/logo.png")
+  src_logo_h=$(identify -format '%h' "$staging_dir/logo.png")
 
   max_logo_w=$((canvas_w / 2))
   max_logo_h=$((canvas_h / 2))
-  logo_aspect=$((logo_w * 1000 / logo_h))
 
-  if (( logo_w > max_logo_w )); then
-    logo_w=$max_logo_w
-    logo_h=$((logo_w * 1000 / logo_aspect))
-  fi
-
-  if (( logo_h > max_logo_h )); then
-    logo_h=$max_logo_h
-    logo_w=$((logo_h * logo_aspect / 1000))
+  # For pixel art, use integer scale factors to keep crisp edges.
+  if (( src_logo_w <= max_logo_w && src_logo_h <= max_logo_h )); then
+    # Source fits: find the largest integer upscale multiplier.
+    scale=1
+    while (( src_logo_w * (scale + 1) <= max_logo_w && src_logo_h * (scale + 1) <= max_logo_h )); do
+      scale=$((scale + 1))
+    done
+    logo_w=$((src_logo_w * scale))
+    logo_h=$((src_logo_h * scale))
+  else
+    # Source is larger than the max bounds: scale down preserving aspect ratio.
+    if (( src_logo_w * max_logo_h > src_logo_h * max_logo_w )); then
+      logo_w=$max_logo_w
+      logo_h=$((max_logo_w * src_logo_h / src_logo_w))
+    else
+      logo_h=$max_logo_h
+      logo_w=$((max_logo_h * src_logo_w / src_logo_h))
+    fi
   fi
 
   margin=20
   logo_x=$margin
   logo_y=$margin
 
+  # Scale pixel art with nearest-neighbor to keep crisp edges.
+  # Pre-matte the logo with the background color before scaling so
+  # any residual color in the transparent areas doesn't bleed into
+  # semi-transparent edge pixels (white-halo fix).
+  # Output as PNG24 (no alpha channel) for GRUB2 compatibility.
   convert -size ${canvas_w}x${canvas_h} "xc:#$bg_hex" \
-    \( "$staging_dir/logo.png" -resize ${logo_w}x${logo_h} \) -geometry +${logo_x}+${logo_y} -composite \
-    "$output_path"
+    \( "$staging_dir/logo.png" -background "#$bg_hex" -alpha Background \
+       -filter Point -resize ${logo_w}x${logo_h} \) \
+    -geometry +${logo_x}+${logo_y} -compose Over -composite \
+    -alpha off \
+    "PNG24:$output_path"
 done
