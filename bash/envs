@@ -1,2 +1,13 @@
+# Editor used by CLI
+export SUDO_EDITOR="$EDITOR"
+
+# Fix BAT theme
+export BAT_THEME=ansi
+
+# Color man pages with bat
+export MANROFFOPT="-c"
+export MANPAGER="sh -c 'col -bx | batcat -l man -p'"
+
+# Dotfiles
 export DOTFILES_PATH=$HOME/.cfg
 export PATH=$DOTFILES_PATH/bin:$PATH
