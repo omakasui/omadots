@@ -1,0 +1,8 @@
+# System
+alias update-system="sudo apt update && sudo apt -y upgrade && sudo apt -y dist-upgrade && sudo apt -y autoremove"
+alias update-firmware="sudo fwupdmgr get-devices && sudo fwupdmgr get-updates && sudo fwupdmgr update"
+
+# Browser
+open() (
+  xdg-open "$@" >/dev/null 2>&1
+)
