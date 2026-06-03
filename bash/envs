@@ -8,6 +8,9 @@ export BAT_THEME=ansi
 export MANROFFOPT="-c"
 export MANPAGER="sh -c 'col -bx | batcat -l man -p'"
 
+# GPG TTY per pinentry
+export GPG_TTY=$(tty)
+
 # Dotfiles
 export DOTFILES_PATH=$HOME/.cfg
 export PATH=$DOTFILES_PATH/bin:$PATH
