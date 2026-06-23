@@ -5,6 +5,9 @@
 source "$DOTFILES_PATH/lib/output"
 
 apply_dotfiles_git() {
+    if [[ ! -d "$HOME/.config/git" ]]; then
+        mkdir -p "$HOME/.config/git"
+    fi
     cp -R $DOTFILES_PATH/config/git/* $HOME/.config/git
 }
 
