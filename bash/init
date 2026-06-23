@@ -2,6 +2,10 @@ if command -v mise &> /dev/null; then
   eval "$(mise activate bash --shims)"
 fi
 
+if [[ -f "$HOME/.local/bin/mise" ]]; then
+  eval "$("$HOME/.local/bin/mise" activate bash --shims)"
+fi
+
 if [[ $- == *i* ]] && [[ ${TERM:-} != "dumb" ]] && command -v starship &> /dev/null; then
   eval "$(starship init bash)"
 fi
