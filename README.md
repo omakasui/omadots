@@ -25,7 +25,7 @@ If you prefer to install manually:
 
 ```bash
 # Clone the repository
-git clone https://codeberg.com/Kasui92/dotfiles.git ~/.cfg
+git clone https://codeberg.org/Kasui92/dotfiles.git ~/.cfg
 
 # Run the bootstrap script
 bash ~/.cfg/boot.sh
