@@ -1,0 +1,28 @@
+#! /bin/bash
+
+# dotfiles:summary=Apply dotfiles generic configuration
+
+source "$DOTFILES_PATH/lib/output"
+
+CONFIG_FILE=$1
+
+if [[ -z $CONFIG_FILE ]]; then
+  cat <<USAGE
+  Usage: $0 [config]
+
+  Must provide a config folder path relative to the config directory.
+  To copy btop configuration, for example, run: $0 btop
+USAGE
+  exit 1
+fi
+
+apply_dotfiles_config() {
+    if [[ ! -d "$HOME/.config/$CONFIG_FILE" ]]; then
+        mkdir -p "$HOME/.config/$CONFIG_FILE"
+    fi
+
+    cp -R $DOTFILES_PATH/config/$CONFIG_FILE/* $HOME/.config/$CONFIG_FILE
+}
+
+apply_dotfiles_config
+echo -e "${GREEN}Dotfiles configuration applied to $HOME/.config/$CONFIG_FILE.${RESET}"

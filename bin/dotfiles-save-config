@@ -1,0 +1,26 @@
+#! /bin/bash
+
+# dotfiles:summary=Save dotfiles configuration
+
+CONFIG_FILE=$1
+
+if [[ -z $CONFIG_FILE ]]; then
+  cat <<USAGE
+  Usage: $0 [config]
+
+  Must provide a config folder path relative to the config directory.
+  To save btop configuration, for example, run: $0 btop
+USAGE
+  exit 1
+fi
+
+save_dotfiles_config() {
+    if [[ ! -d "$DOTFILES_PATH/config/$CONFIG_FILE" ]]; then
+        mkdir -p "$DOTFILES_PATH/config/$CONFIG_FILE"
+    fi
+
+    cp -R $HOME/.config/$CONFIG_FILE/* $DOTFILES_PATH/config/$CONFIG_FILE
+}
+
+save_dotfiles_config
+echo -e "${GREEN}Dotfiles configuration saved from $HOME/.config/$CONFIG_FILE to $DOTFILES_PATH/config/$CONFIG_FILE.${RESET}"
