@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# dotfiles:summary=Apply dotfiles bash aliases and functions
+# dotfiles:summary=Apply dotfiles git configuration
 
 source "$DOTFILES_PATH/lib/output"
 
