@@ -8,7 +8,7 @@ apply_dotfiles_niri() {
     if [[ ! -d "$HOME/.config/niri" ]]; then
         mkdir -p "$HOME/.config/niri"
     fi
-    cp -R $DOTFILES_PATH/config/niri/* $HOME/.config/niri
+    cp -R $DOTFILES_PATH/config/niri/dms/* $HOME/.config/niri
 }
 
 apply_dotfiles_niri
