@@ -4,11 +4,38 @@
 
 source "$DOTFILES_PATH/lib/output"
 
-CONFIG_FILE=$1
+OUTPUT_DIR="$HOME/.config"
+DOTFILES_CONFIG_DIR="$DOTFILES_PATH/config"
+CONFIG_FILE=""
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -h|--help)
+      cat <<USAGE
+  Usage: $0 [options] [config]
+  Options:
+    -h, --help      Show this help message and exit
+    -d, --dir       Specify a custom output directory (default: $HOME/.config)
+USAGE
+      exit 0
+      ;;
+    -d|--dir)
+      OUTPUT_DIR="$2"
+      shift 2
+      ;;
+    *)
+      CONFIG_FILE="$1"
+      shift
+      ;;
+  esac
+done
 
 if [[ -z $CONFIG_FILE ]]; then
   cat <<USAGE
-  Usage: $0 [config]
+  Usage: $0 [options] [config]
+  Options:
+    -h, --help      Show this help message and exit
+    -d, --dir       Specify a custom output directory (default: $HOME/.config)
 
   Must provide a config folder path relative to the config directory.
   To copy btop configuration, for example, run: $0 btop
@@ -17,12 +44,12 @@ USAGE
 fi
 
 apply_dotfiles_config() {
-    if [[ ! -d "$HOME/.config/$CONFIG_FILE" ]]; then
-        mkdir -p "$HOME/.config/$CONFIG_FILE"
+    if [[ ! -d "$OUTPUT_DIR/$CONFIG_FILE" ]]; then
+        mkdir -p "$OUTPUT_DIR/$CONFIG_FILE"
     fi
 
-    cp -R $DOTFILES_PATH/config/$CONFIG_FILE/* $HOME/.config/$CONFIG_FILE
+    cp -R "$DOTFILES_CONFIG_DIR/$CONFIG_FILE/"* "$OUTPUT_DIR/$CONFIG_FILE"
 }
 
 apply_dotfiles_config
-echo -e "${GREEN}Dotfiles configuration applied to $HOME/.config/$CONFIG_FILE.${RESET}"
+echo -e "${GREEN}Dotfiles configuration applied to $OUTPUT_DIR/$CONFIG_FILE.${RESET}"
