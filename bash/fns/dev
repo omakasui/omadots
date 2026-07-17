@@ -18,7 +18,9 @@ create_migration() {
 
   local migration_file="$migrations_dir/$migration_name"
   touch $migration_file
-  $EDITOR $migration_file
+  if [ -n "$EDITOR" ]; then
+    $EDITOR $migration_file
+  fi
 }
 
 # Rename files with a common prefix to a new prefix
