@@ -1,6 +1,10 @@
 #! /bin/bash
 
 # dotfiles:summary=Save dotfiles configuration
+# dotfiles:args=<config>
+
+DOTFILES_PATH="${DOTFILES_PATH:=${HOME}/.cfg}"
+source "$DOTFILES_PATH/lib/output"
 
 CONFIG_FILE=$1
 
@@ -20,6 +24,25 @@ save_dotfiles_config() {
     fi
 
     cp -R $HOME/.config/$CONFIG_FILE/* $DOTFILES_PATH/config/$CONFIG_FILE
+
+    # Check if the dotfiles directory is a git repository and commit changes if it is
+    if [[ -d "$DOTFILES_PATH/.git" ]]; then
+        if git -C "$DOTFILES_PATH" rev-parse --is-inside-work-tree &> /dev/null; then
+            if git -C "$DOTFILES_PATH" rev-parse --is-bare-repository &> /dev/null; then
+                echo -e "${YELLOW}Warning: $DOTFILES_PATH is a bare repository. Cannot commit changes.${RESET}"
+            else
+                if git -C "$DOTFILES_PATH" diff --quiet; then
+                    echo -e "${GREEN}No changes to commit.${RESET}"
+                else
+                    git -C "$DOTFILES_PATH" add config/$CONFIG_FILE
+                    git -C "$DOTFILES_PATH" commit -m "Update $CONFIG_FILE configuration"
+                    echo -e "${GREEN}Changes committed to $DOTFILES_PATH.${RESET}"
+                fi
+            fi
+        else
+            echo -e "${YELLOW}Warning: $DOTFILES_PATH is not a git repository. Cannot commit changes.${RESET}"
+        fi
+    fi
 }
 
 save_dotfiles_config
