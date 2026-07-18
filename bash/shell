@@ -7,7 +7,5 @@ HISTFILESIZE="${HISTSIZE}"
 # Autocompletion
 source /usr/share/bash-completion/bash_completion
 
-# Set complete path
-export OMARI_PATH="$HOME/.local/share/omari"
-export PATH="$OMARI_PATH/bin:$PATH"
+# Disable hashall to avoid caching of commands
 set +h
