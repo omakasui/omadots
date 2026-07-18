@@ -1,6 +1,8 @@
 #! /bin/bash
 
 # dotfiles:summary=Apply dotfiles generic configuration
+# dotfiles:args=<config>
+# dotfiles:options=-d|--dir:Specify a custom output directory (default: $HOME/.config)
 
 source "$DOTFILES_PATH/lib/output"
 
