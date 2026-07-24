@@ -1,0 +1,24 @@
+#! /bin/bash
+
+# dotfiles:summary=Link a real 'bat' binary on systems where it is only installed as batcat
+
+DOTFILES_PATH="${DOTFILES_PATH:=${HOME}/.cfg}"
+source "$DOTFILES_PATH/lib/output"
+
+apply_dotfiles_bat() {
+    if command -v bat &> /dev/null; then
+        echo -e "${YELLOW}'bat' already available, skipping.${RESET}"
+        return
+    fi
+
+    if ! command -v batcat &> /dev/null; then
+        echo -e "${YELLOW}'batcat' not found, skipping.${RESET}"
+        return
+    fi
+
+    mkdir -p ~/.local/bin
+    ln -sf "$(command -v batcat)" ~/.local/bin/bat
+    echo -e "${GREEN}Linked ~/.local/bin/bat -> batcat.${RESET}"
+}
+
+apply_dotfiles_bat

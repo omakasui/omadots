@@ -20,16 +20,6 @@ alias gcam='git commit -a -m'
 alias gcad='git commit -a --amend'
 alias gfp='git fetch --prune'
 
-# Bat
-alias bat='batcat'
-b() {
-  if command -v batcat &> /dev/null; then
-    batcat "$@"
-  else
-    bat "$@"
-  fi
-}
-
 if command -v lazygit &> /dev/null; then
   alias lzg='lazygit'
 fi
