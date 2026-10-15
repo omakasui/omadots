@@ -7,25 +7,6 @@ This repository provides a modular dotfiles setup with an easy-to-use command-li
 
 ## Installation
 
-The **recommended approach** is to clone this repository into a `.cfg` directory in your HOME folder. This approach ensures all installer scripts and configurations work correctly without requiring path modifications.
-
-### Automatic Installation (Recommended)
-
-For a quick and guided installation using the recommended approach:
-
-```bash
-curl -fsSL https://omakasui.org/dotfiles | bash
-```
-
-This script will automatically:
-
-- Clone the repository to `~/.cfg`
-- Set up everything you need to manage your configurations
-
-### Manual Installation
-
-If you prefer to install manually:
-
 ```bash
 # Clone the repository
 git clone https://codeberg.org/Kasui92/dotfiles.git ~/.cfg
