@@ -1,5 +1,8 @@
 # dotfiles
 
+> [!WARNING]
+> I am starting to adopt [`chezmoi`](https://www.chezmoi.io) instead of custom scripts. This repository will not receive active maintenance and remains as an example of dotfiles structure.
+
 This repository provides a modular dotfiles setup with an easy-to-use command-line interface.
 
 ## Installation
