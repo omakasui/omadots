@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -o pipefail
-
 # omadots:summary=Update Dotfiles
+
+set -o pipefail
 
 source "$DOTFILES_PATH/lib/output"
 
