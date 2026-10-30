@@ -6,7 +6,7 @@ set -o pipefail
 # This script clones the dotfiles repository and sets up the dotfiles command
 
 # Use custom repo if specified, otherwise use default
-DOTFILES_REPO="${DOTFILES_REPO:-Kasui92/dotfiles}"
+DOTFILES_REPO="${DOTFILES_REPO:-omakasui/omadots}"
 DOTFILES_DIR="$HOME/.cfg"
 
 # Colors for output
@@ -36,7 +36,7 @@ fi
 
 # Clone the dotfiles repository if not skipped
 if [ ! -d "$DOTFILES_DIR" ]; then
-  echo -e "${GREEN}\nCloning Dotfiles from https://github.com/$DOTFILES_REPO...${RESET}"
+  echo -e "${GREEN}\nCloning omadots from https://github.com/$DOTFILES_REPO...${RESET}"
   if git clone "https://github.com/$DOTFILES_REPO.git" "$DOTFILES_DIR" >/dev/null 2>&1; then
     echo -e "${GREEN}✓ Dotfiles cloned successfully!${RESET}"
   else

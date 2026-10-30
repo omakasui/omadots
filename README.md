@@ -1,20 +1,18 @@
-# dotfiles
+# omadots
 
-> [!WARNING]
-> I am starting to adopt [`chezmoi`](https://www.chezmoi.io) instead of custom scripts.
-> 
-> This repository will not receive active maintenance and remains as an example of dotfiles structure.
-
-This repository provides a modular dotfiles setup with an easy-to-use command-line interface.
+Modular dotfiles managed through the `dotfiles` command, the [Omakasui](https://omakasui.org) way.
 
 ## Installation
 
 ```bash
-# Clone the repository
-git clone https://codeberg.org/Kasui92/dotfiles.git ~/.cfg
-
-# Run the bootstrap script
-bash ~/.cfg/boot.sh
+curl -fsSL https://omakasui.org/omadots | bash
 ```
 
-The bootstrap script will set up the `dotfiles` command for you.
+The bootstrap script clones this repository into `~/.cfg` and adds `~/.cfg/bin` to `PATH`, providing the `dotfiles` command.
+
+### Manual installation
+
+```bash
+git clone https://github.com/omakasui/omadots.git ~/.cfg
+bash ~/.cfg/boot.sh
+```
