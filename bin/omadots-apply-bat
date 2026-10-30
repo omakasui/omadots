@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# dotfiles:summary=Link a real 'bat' binary on systems where it is only installed as batcat
+# omadots:summary=Link a real 'bat' binary on systems where it is only installed as batcat
 
 DOTFILES_PATH="${DOTFILES_PATH:=${HOME}/.cfg}"
 source "$DOTFILES_PATH/lib/output"

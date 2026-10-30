@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# dotfiles:summary=Apply dotfiles git configuration
+# omadots:summary=Apply dotfiles git configuration
 
 source "$DOTFILES_PATH/lib/output"
 

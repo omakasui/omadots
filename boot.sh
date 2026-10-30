@@ -3,7 +3,7 @@
 set -o pipefail
 
 # Bootstrap script for dotfiles installation
-# This script clones the dotfiles repository and sets up the dotfiles command
+# This script clones the dotfiles repository and sets up the omadots command
 
 # Use custom repo if specified, otherwise use default
 DOTFILES_REPO="${DOTFILES_REPO:-omakasui/omadots}"
@@ -23,7 +23,7 @@ if [ -d "$DOTFILES_DIR" ]; then
   choice=${choice:-N}
   case "$choice" in
     y|Y ) rm -rf "$DOTFILES_DIR" ;;
-    n|N ) echo -e "${YELLOW}Skipping clone. Proceeding to setup dotfiles command.${RESET}" ;;
+    n|N ) echo -e "${YELLOW}Skipping clone. Proceeding to setup omadots command.${RESET}" ;;
     * ) echo -e "${RED}Invalid choice. Aborting installation.${RESET}"; exit 1 ;;
   esac
 fi
@@ -57,9 +57,9 @@ if ! echo "$PATH" | grep -q "$DOTFILES_DIR/bin"; then
     echo "export PATH=\"\$HOME/.cfg/bin:\$PATH\"" >> ~/.zshrc
   fi
 
-  echo -e "${GREEN}✓ Dotfiles command added to PATH!${RESET}"
+  echo -e "${GREEN}✓ omadots command added to PATH!${RESET}"
 else
-  echo -e "${YELLOW}Dotfiles command already in PATH, skipping PATH setup.${RESET}"
+  echo -e "${YELLOW}omadots command already in PATH, skipping PATH setup.${RESET}"
 fi
 
 # Finish installation

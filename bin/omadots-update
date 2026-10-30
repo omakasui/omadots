@@ -2,7 +2,7 @@
 
 set -o pipefail
 
-# dotfiles:summary=Update Dotfiles
+# omadots:summary=Update Dotfiles
 
 source "$DOTFILES_PATH/lib/output"
 

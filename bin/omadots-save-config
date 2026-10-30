@@ -1,7 +1,7 @@
 #! /bin/bash
 
-# dotfiles:summary=Save dotfiles configuration
-# dotfiles:args=<config>
+# omadots:summary=Save dotfiles configuration
+# omadots:args=<config>
 
 DOTFILES_PATH="${DOTFILES_PATH:=${HOME}/.cfg}"
 source "$DOTFILES_PATH/lib/output"

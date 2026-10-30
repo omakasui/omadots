@@ -1,6 +1,6 @@
 # omadots
 
-Modular dotfiles managed through the `dotfiles` command, the [Omakasui](https://omakasui.org) way.
+Modular dotfiles managed through the `omadots` command, the [Omakasui](https://omakasui.org) way.
 
 ## Installation
 
@@ -8,7 +8,7 @@ Modular dotfiles managed through the `dotfiles` command, the [Omakasui](https://
 curl -fsSL https://omakasui.org/omadots | bash
 ```
 
-The bootstrap script clones this repository into `~/.cfg` and adds `~/.cfg/bin` to `PATH`, providing the `dotfiles` command.
+The bootstrap script clones this repository into `~/.cfg` and adds `~/.cfg/bin` to `PATH`, providing the `omadots` command.
 
 ### Manual installation
 

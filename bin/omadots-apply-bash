@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# dotfiles:summary=Apply dotfiles bash aliases and functions
+# omadots:summary=Apply dotfiles bash aliases and functions
 
 DOTFILES_PATH="${DOTFILES_PATH:=${HOME}/.cfg}"
 source "$DOTFILES_PATH/lib/output"

@@ -113,7 +113,7 @@ register_command() {
       break
     fi
 
-    if [[ $line =~ ^[[:space:]]*#[[:space:]]*dotfiles:([[:alnum:]_-]+)=(.*)$ ]]; then
+    if [[ $line =~ ^[[:space:]]*#[[:space:]]*omadots:([[:alnum:]_-]+)=(.*)$ ]]; then
       metadata_key="${BASH_REMATCH[1]}"
       metadata_value="${BASH_REMATCH[2]}"
       metadata_value="${metadata_value%$'\r'}"
@@ -156,16 +156,16 @@ register_command() {
       fallback_summary="${fallback_summary%$'\r'}"
       fallback_summary="${fallback_summary//$'\t'/ }"
 
-      if [[ -z $fallback_summary || $fallback_summary == dotfiles:* ]]; then
+      if [[ -z $fallback_summary || $fallback_summary == omadots:* ]]; then
         fallback_summary=""
       fi
     fi
   done <"$file"
 
-  local stem="${file_binary#dotfiles-}"
+  local stem="${file_binary#omadots-}"
   local fallback_group="$stem"
   local fallback_name=""
-  local fallback_route="dotfiles ${stem//-/ }"
+  local fallback_route="omadots ${stem//-/ }"
 
   if [[ $stem == *-* ]]; then
     fallback_group="${stem%%-*}"
@@ -178,7 +178,7 @@ register_command() {
   [[ $name_seen != "true" ]] && name="$fallback_name"
   [[ -z $summary && -n $fallback_summary ]] && summary="$fallback_summary"
   [[ -z $summary ]] && summary="Run the ${stem//-/ } command"
-  local route="dotfiles $group"
+  local route="omadots $group"
   if [[ -n $name ]]; then
     route+=" $name"
   fi
@@ -229,7 +229,7 @@ register_command() {
 load_commands() {
   local file=""
 
-  for file in "$DOTFILES_BIN_DIR"/dotfiles-*; do
+  for file in "$DOTFILES_BIN_DIR"/omadots-*; do
     [[ -f $file && -x $file ]] || continue
     register_command "$file"
   done
@@ -258,7 +258,7 @@ group_has_child_commands() {
   local group="$1"
   local file=""
 
-  for file in "$DOTFILES_BIN_DIR/dotfiles-$group"-*; do
+  for file in "$DOTFILES_BIN_DIR/omadots-$group"-*; do
     [[ -f $file && -x $file ]] && return 0
   done
 
@@ -268,7 +268,7 @@ group_has_child_commands() {
 group_has_binary_commands() {
   local group="$1"
 
-  [[ -x $DOTFILES_BIN_DIR/dotfiles-$group ]] && return 0
+  [[ -x $DOTFILES_BIN_DIR/omadots-$group ]] && return 0
   group_has_child_commands "$group"
 }
 
@@ -289,11 +289,11 @@ load_group_commands() {
   local group="$1"
   local file=""
 
-  if [[ -f $DOTFILES_BIN_DIR/dotfiles-$group && -x $DOTFILES_BIN_DIR/dotfiles-$group ]]; then
-    register_command "$DOTFILES_BIN_DIR/dotfiles-$group"
+  if [[ -f $DOTFILES_BIN_DIR/omadots-$group && -x $DOTFILES_BIN_DIR/omadots-$group ]]; then
+    register_command "$DOTFILES_BIN_DIR/omadots-$group"
   fi
 
-  for file in "$DOTFILES_BIN_DIR/dotfiles-$group"-*; do
+  for file in "$DOTFILES_BIN_DIR/omadots-$group"-*; do
     [[ -f $file && -x $file ]] || continue
     register_command "$file"
   done
@@ -310,9 +310,9 @@ resolve_direct_route() {
   local candidate=""
 
   for (( prefix_count = argc; prefix_count >= 1; prefix_count-- )); do
-    route="dotfiles $(join_words " " "${args[@]:0:prefix_count}")"
+    route="omadots $(join_words " " "${args[@]:0:prefix_count}")"
 
-    binary="dotfiles-$(join_words "-" "${args[@]:0:prefix_count}")"
+    binary="omadots-$(join_words "-" "${args[@]:0:prefix_count}")"
     candidate="$DOTFILES_BIN_DIR/$binary"
     if [[ -f $candidate && -x $candidate ]]; then
       DIRECT_RESOLVED_BINARY="$binary"
@@ -339,7 +339,7 @@ sorted_keys() {
 
 fallback_group_for_key() {
   local key="$1"
-  local fallback="${COMMAND_FALLBACK_ROUTE[$key]#dotfiles }"
+  local fallback="${COMMAND_FALLBACK_ROUTE[$key]#omadots }"
 
   printf '%s' "${fallback%% *}"
 }
@@ -431,17 +431,17 @@ show_group_list() {
 
 show_main_help() {
   cat <<'EOF'
-Dotfiles command center
+omadots command center
 
 Usage:
-  dotfiles <command> [args...]
-  dotfiles commands [--all] [--json] [--check]
-  dotfiles <group> --help
-  dotfiles <group> <command> --help
+  omadots <command> [args...]
+  omadots commands [--all] [--json] [--check]
+  omadots <group> --help
+  omadots <group> <command> --help
 
 Common commands:
-  dotfiles update              Update Dotfiles
-  dotfiles install             Install Dotfiles
+  omadots update              Update Dotfiles
+  omadots install             Install Dotfiles
 
 Groups:
 EOF
@@ -449,19 +449,19 @@ EOF
   cat <<'EOF'
 
 Discovery:
-  dotfiles commands            List all commands
-  dotfiles commands --all      Include commands explicitly marked hidden
-  dotfiles commands --json     Machine-readable command list
-  dotfiles commands --check    Validate command metadata and routes
+  omadots commands            List all commands
+  omadots commands --all      Include commands explicitly marked hidden
+  omadots commands --json     Machine-readable command list
+  omadots commands --check    Validate command metadata and routes
 EOF
 }
 
 show_commands_help() {
   cat <<'EOF'
 Usage:
-  dotfiles commands [--all] [--json] [--markdown] [--check]
+  omadots commands [--all] [--json] [--markdown] [--check]
 
-List commands known to the Dotfiles command center.
+List commands known to the omadots command center.
 
 Options:
   --all       Include commands explicitly marked hidden
@@ -501,9 +501,9 @@ show_commands() {
   local alias_rows=""
 
   if [[ $include_all == "true" ]]; then
-    echo "Dotfiles commands (all):"
+    echo "omadots commands (all):"
   else
-    echo "Dotfiles commands:"
+    echo "omadots commands:"
   fi
 
   while IFS= read -r key; do
@@ -684,7 +684,7 @@ parse_commands_args() {
       return 0
       ;;
     *)
-      echo "Unknown option for dotfiles commands: $1" >&2
+      echo "Unknown option for omadots commands: $1" >&2
       show_commands_help >&2
       return 2
       ;;
@@ -737,7 +737,7 @@ show_group_help() {
   if [[ -n $rows ]]; then
     print_command_table "$rows"
   else
-    echo "  No documented commands found. Try: dotfiles commands --all"
+    echo "  No documented commands found. Try: omadots commands --all"
   fi
 }
 
@@ -756,7 +756,7 @@ show_prefix_help() {
 
   [[ -n $rows ]] || return 1
 
-  echo "${prefix#dotfiles } commands:"
+  echo "${prefix#omadots } commands:"
   print_command_table "$rows"
 }
 
@@ -837,7 +837,7 @@ resolve_route() {
   local key=""
 
   for (( prefix_count = argc; prefix_count >= 1; prefix_count-- )); do
-    route="dotfiles $(join_words " " "${args[@]:0:prefix_count}")"
+    route="omadots $(join_words " " "${args[@]:0:prefix_count}")"
     key="${ROUTE_TO_KEY[$route]}"
 
     if [[ -n $key ]]; then
@@ -856,7 +856,7 @@ suggest_command() {
   local candidate=""
 
   for candidate in "${!ROUTE_TO_KEY[@]}"; do
-    candidate="${candidate#dotfiles }"
+    candidate="${candidate#omadots }"
     if [[ $candidate == "$first"* ]]; then
       printf '%s' "${candidate%% *}"
       return 0
@@ -977,16 +977,16 @@ dispatch_or_help() {
     return 0
   fi
 
-  if show_prefix_help "dotfiles ${args[*]}"; then
+  if show_prefix_help "omadots ${args[*]}"; then
     return 0
   fi
 
-  echo "Unknown Dotfiles command: dotfiles ${args[*]}" >&2
+  echo "Unknown omadots command: omadots ${args[*]}" >&2
   suggestion=$(suggest_command "${args[0]}")
   if [[ -n $suggestion ]]; then
-    echo "Did you mean: dotfiles $suggestion ?" >&2
+    echo "Did you mean: omadots $suggestion ?" >&2
   fi
-  echo "Run 'dotfiles commands --all' to discover available commands." >&2
+  echo "Run 'omadots commands --all' to discover available commands." >&2
   return 127
 }
 
